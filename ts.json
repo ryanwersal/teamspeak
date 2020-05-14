@@ -1,0 +1,20 @@
+{
+  "builders": [
+    {
+      "type": "digitalocean",
+      "image": "ubuntu-20-04-x64",
+      "region": "nyc3",
+      "size": "s-1vcpu-1gb",
+      "droplet_name": "ts",
+      "snapshot_name": "ts-packer-{{timestamp}}",
+      "snapshot_regions": ["nyc3"],
+      "ssh_username": "root"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh"
+    }
+  ]
+}
