@@ -1,3 +1,4 @@
+doc
 .env
 *.tfstate
 *.tfstate.backup

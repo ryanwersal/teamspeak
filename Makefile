@@ -2,7 +2,7 @@ init:
 	terraform init
 
 build:
-	packer build ts.json
+	(cd packer && packer build ts.json)
 
 apply:
 	terraform apply

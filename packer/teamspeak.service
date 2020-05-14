@@ -1,0 +1,9 @@
+[Unit]
+Description=Teamspeak server
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /root/teamspeak/ts3server_minimal_runscript.sh inifile=/root/teamspeak/ts3server.ini
+
+[Install]
+WantedBy=multi-user.target

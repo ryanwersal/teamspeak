@@ -1,0 +1,38 @@
+{
+  "builders": [
+    {
+      "type": "digitalocean",
+      "image": "ubuntu-20-04-x64",
+      "region": "nyc3",
+      "size": "s-1vcpu-1gb",
+      "droplet_name": "ts",
+      "snapshot_name": "ts-packer-{{timestamp}}",
+      "snapshot_regions": ["nyc3"],
+      "ssh_username": "root"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "prepare.sh",
+      "pause_before": 10
+    },
+    {
+      "type": "file",
+      "source": "ts3server.ini",
+      "destination": "/root/teamspeak/ts3server.ini"
+    },
+    {
+      "type": "file",
+      "source": "teamspeak.service",
+      "destination": "/etc/systemd/system/teamspeak.service"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod 644 /etc/systemd/system/teamspeak.service",
+        "systemctl enable teamspeak"
+      ]
+    }
+  ]
+}

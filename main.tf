@@ -22,6 +22,40 @@ resource "digitalocean_droplet" "ts" {
   ssh_keys = [data.digitalocean_ssh_key.default.fingerprint]
 }
 
+data "http" "ip" {
+  url = "https://api.ipify.org/"
+}
+
+resource "digitalocean_firewall" "fw" {
+  name = "teamspeak-firewall"
+
+  droplet_ids = [digitalocean_droplet.ts.id]
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["${chomp(data.http.ip.body)}/32"]
+  }
+
+  inbound_rule {
+    protocol         = "udp"
+    port_range       = "9987"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "30033"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "tcp"
+    port_range            = "443"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}
+
 resource "digitalocean_domain" "domain" {
   name = "accidental-bravery.com"
 }
