@@ -8,8 +8,8 @@
  */
 
 package openapi
-// ChannelListResponse struct for ChannelListResponse
-type ChannelListResponse struct {
-	Body []ChannelListResponseBody `json:"body,omitempty"`
+// ChannelCreateResponse struct for ChannelCreateResponse
+type ChannelCreateResponse struct {
+	Body []ChannelCreateResponseBody `json:"body,omitempty"`
 	Status Status `json:"status,omitempty"`
 }

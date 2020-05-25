@@ -28,6 +28,7 @@ type ChannelApiService service
 // ChannelCreateOpts Optional parameters for the method 'ChannelCreate'
 type ChannelCreateOpts struct {
     ChannelTopic optional.String
+    ChannelDescription optional.String
 }
 
 /*
@@ -36,14 +37,17 @@ ChannelCreate Create a new channel
  * @param channelName Channel's name
  * @param optional nil or *ChannelCreateOpts - Optional Parameters:
  * @param "ChannelTopic" (optional.String) -  Channel's topic
+ * @param "ChannelDescription" (optional.String) -  Channel description
+@return ChannelCreateResponse
 */
-func (a *ChannelApiService) ChannelCreate(ctx _context.Context, channelName string, localVarOptionals *ChannelCreateOpts) (*_nethttp.Response, error) {
+func (a *ChannelApiService) ChannelCreate(ctx _context.Context, channelName string, localVarOptionals *ChannelCreateOpts) (ChannelCreateResponse, *_nethttp.Response, error) {
 	var (
 		localVarHTTPMethod   = _nethttp.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
+		localVarReturnValue  ChannelCreateResponse
 	)
 
 	// create path and map variables
@@ -56,6 +60,9 @@ func (a *ChannelApiService) ChannelCreate(ctx _context.Context, channelName stri
 	if localVarOptionals != nil && localVarOptionals.ChannelTopic.IsSet() {
 		localVarQueryParams.Add("channel_topic", parameterToString(localVarOptionals.ChannelTopic.Value(), ""))
 	}
+	if localVarOptionals != nil && localVarOptionals.ChannelDescription.IsSet() {
+		localVarQueryParams.Add("channel_description", parameterToString(localVarOptionals.ChannelDescription.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -66,7 +73,7 @@ func (a *ChannelApiService) ChannelCreate(ctx _context.Context, channelName stri
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{}
+	localVarHTTPHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
@@ -75,18 +82,18 @@ func (a *ChannelApiService) ChannelCreate(ctx _context.Context, channelName stri
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -94,10 +101,201 @@ func (a *ChannelApiService) ChannelCreate(ctx _context.Context, channelName stri
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+// ChannelDeleteOpts Optional parameters for the method 'ChannelDelete'
+type ChannelDeleteOpts struct {
+    Force optional.Float32
+}
+
+/*
+ChannelDelete Delete channel
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param cid Channel ID
+ * @param optional nil or *ChannelDeleteOpts - Optional Parameters:
+ * @param "Force" (optional.Float32) -  Force the deletion
+@return MinimalResponse
+*/
+func (a *ChannelApiService) ChannelDelete(ctx _context.Context, cid string, localVarOptionals *ChannelDeleteOpts) (MinimalResponse, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  MinimalResponse
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/channeldelete"
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	localVarQueryParams.Add("cid", parameterToString(cid, ""))
+	if localVarOptionals != nil && localVarOptionals.Force.IsSet() {
+		localVarQueryParams.Add("force", parameterToString(localVarOptionals.Force.Value(), ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+// ChannelEditOpts Optional parameters for the method 'ChannelEdit'
+type ChannelEditOpts struct {
+    ChannelTopic optional.String
+    ChannelDescription optional.String
+    ChannelCodecQuality optional.Float32
+}
+
+/*
+ChannelEdit Edit channel
+ * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param cid Channel ID
+ * @param optional nil or *ChannelEditOpts - Optional Parameters:
+ * @param "ChannelTopic" (optional.String) -  Channel topic
+ * @param "ChannelDescription" (optional.String) -  Channel description
+ * @param "ChannelCodecQuality" (optional.Float32) -  Codec quality for the channel
+@return MinimalResponse
+*/
+func (a *ChannelApiService) ChannelEdit(ctx _context.Context, cid string, localVarOptionals *ChannelEditOpts) (MinimalResponse, *_nethttp.Response, error) {
+	var (
+		localVarHTTPMethod   = _nethttp.MethodPost
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+		localVarReturnValue  MinimalResponse
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/channeledit"
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := _neturl.Values{}
+	localVarFormParams := _neturl.Values{}
+
+	localVarQueryParams.Add("cid", parameterToString(cid, ""))
+	if localVarOptionals != nil && localVarOptionals.ChannelTopic.IsSet() {
+		localVarQueryParams.Add("channel_topic", parameterToString(localVarOptionals.ChannelTopic.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.ChannelDescription.IsSet() {
+		localVarQueryParams.Add("channel_description", parameterToString(localVarOptionals.ChannelDescription.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.ChannelCodecQuality.IsSet() {
+		localVarQueryParams.Add("channel_codec_quality", parameterToString(localVarOptionals.ChannelCodecQuality.Value(), ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := _ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
 /*

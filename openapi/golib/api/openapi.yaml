@@ -49,14 +49,139 @@ paths:
         schema:
           type: string
         style: form
+      - description: Channel description
+        explode: true
+        in: query
+        name: channel_description
+        required: false
+        schema:
+          type: string
+        style: form
       responses:
         "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelCreateResponse'
           description: Successful
       summary: Create a new channel
       tags:
       - Channel
+  /channeledit:
+    post:
+      operationId: channelEdit
+      parameters:
+      - description: Channel ID
+        explode: true
+        in: query
+        name: cid
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Channel topic
+        explode: true
+        in: query
+        name: channel_topic
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Channel description
+        explode: true
+        in: query
+        name: channel_description
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Codec quality for the channel
+        explode: true
+        in: query
+        name: channel_codec_quality
+        required: false
+        schema:
+          type: number
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinimalResponse'
+          description: Successful
+      summary: Edit channel
+      tags:
+      - Channel
+  /channeldelete:
+    post:
+      operationId: channelDelete
+      parameters:
+      - description: Channel ID
+        explode: true
+        in: query
+        name: cid
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Force the deletion
+        explode: true
+        in: query
+        name: force
+        required: false
+        schema:
+          enum:
+          - 0
+          - 1
+          type: number
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinimalResponse'
+          description: Successful
+      summary: Delete channel
+      tags:
+      - Channel
 components:
   schemas:
+    MinimalResponse:
+      example:
+        status:
+          code: 0.8008281904610115
+          message: message
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+      type: object
+    Status:
+      example:
+        code: 0.8008281904610115
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+      type: object
+    ChannelListResponse_body:
+      example:
+        channel_name: channel_name
+        channel_needed_subscribe_power: channel_needed_subscribe_power
+        channel_order: channel_order
+        cid: cid
+      properties:
+        channel_name:
+          type: string
+        channel_needed_subscribe_power:
+          type: string
+        channel_order:
+          type: string
+        cid:
+          type: string
     ChannelListResponse:
       example:
         body:
@@ -77,28 +202,25 @@ components:
             $ref: '#/components/schemas/ChannelListResponse_body'
           type: array
         status:
-          $ref: '#/components/schemas/ChannelListResponse_status'
-    ChannelListResponse_body:
+          $ref: '#/components/schemas/Status'
+    ChannelCreateResponse_body:
       example:
-        channel_name: channel_name
-        channel_needed_subscribe_power: channel_needed_subscribe_power
-        channel_order: channel_order
         cid: cid
       properties:
-        channel_name:
-          type: string
-        channel_needed_subscribe_power:
-          type: string
-        channel_order:
-          type: string
         cid:
           type: string
-    ChannelListResponse_status:
+    ChannelCreateResponse:
       example:
-        code: 0.8008281904610115
-        message: message
+        body:
+        - cid: cid
+        - cid: cid
+        status:
+          code: 0.8008281904610115
+          message: message
       properties:
-        code:
-          type: number
-        message:
-          type: string
+        body:
+          items:
+            $ref: '#/components/schemas/ChannelCreateResponse_body'
+          type: array
+        status:
+          $ref: '#/components/schemas/Status'

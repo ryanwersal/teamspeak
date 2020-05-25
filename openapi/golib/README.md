@@ -33,14 +33,19 @@ All URIs are relative to *http://127.0.0.1:10080/1*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ChannelApi* | [**ChannelCreate**](docs/ChannelApi.md#channelcreate) | **Post** /channelcreate | Create a new channel
+*ChannelApi* | [**ChannelDelete**](docs/ChannelApi.md#channeldelete) | **Post** /channeldelete | Delete channel
+*ChannelApi* | [**ChannelEdit**](docs/ChannelApi.md#channeledit) | **Post** /channeledit | Edit channel
 *ChannelApi* | [**ChannelList**](docs/ChannelApi.md#channellist) | **Get** /channellist | Gets list of channels
 
 
 ## Documentation For Models
 
+ - [ChannelCreateResponse](docs/ChannelCreateResponse.md)
+ - [ChannelCreateResponseBody](docs/ChannelCreateResponseBody.md)
  - [ChannelListResponse](docs/ChannelListResponse.md)
  - [ChannelListResponseBody](docs/ChannelListResponseBody.md)
- - [ChannelListResponseStatus](docs/ChannelListResponseStatus.md)
+ - [MinimalResponse](docs/MinimalResponse.md)
+ - [Status](docs/Status.md)
 
 
 ## Documentation For Authorization
