@@ -45,13 +45,7 @@ paths:
                         cid:
                           type: string
                   status:
-                    type: object
-                    properties:
-                      code:
-                        type: number
-                      message:
-                        type: string
-
+                    $ref: "#/components/schemas/Status"
   /channelcreate:
     post:
       operationId: channelCreate
@@ -70,6 +64,100 @@ paths:
           description: Channel's topic
           schema:
             type: string
+        - name: channel_description
+          in: query
+          description: Channel description
+          schema:
+            type: string
       responses:
         "200":
           description: Successful
+          content:
+            application/json:
+              schema:
+                title: ChannelCreateResponse
+                type: object
+                properties:
+                  body:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        cid:
+                          type: string
+                  status:
+                    $ref: "#/components/schemas/Status"
+  /channeledit:
+    post:
+      operationId: channelEdit
+      tags:
+        - Channel
+      summary: Edit channel
+      parameters:
+        - name: cid
+          in: query
+          description: Channel ID
+          required: true
+          schema:
+            type: string
+        - name: channel_topic
+          in: query
+          description: Channel topic
+          schema:
+            type: string
+        - name: channel_description
+          in: query
+          description: Channel description
+          schema:
+            type: string
+        - name: channel_codec_quality
+          in: query
+          description: Codec quality for the channel
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MinimalResponse"
+  /channeldelete:
+    post:
+      operationId: channelDelete
+      tags:
+        - Channel
+      summary: Delete channel
+      parameters:
+        - name: cid
+          in: query
+          description: Channel ID
+          required: true
+          schema:
+            type: string
+        - name: force
+          in: query
+          description: Force the deletion
+          schema:
+            enum: [0, 1]
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MinimalResponse"
+components:
+  schemas:
+    MinimalResponse:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/Status"
+    Status:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
