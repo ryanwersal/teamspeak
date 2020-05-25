@@ -1,4 +1,4 @@
-# Go API client for openapi
+# Go API client for teamspeak
 
 Teamspeak WebQuery
 
@@ -23,7 +23,7 @@ go get github.com/antihax/optional
 Put the package under your project folder and add the following in import:
 
 ```golang
-import "./openapi"
+import "./teamspeak"
 ```
 
 ## Documentation for API Endpoints
@@ -35,15 +35,15 @@ Class | Method | HTTP request | Description
 *ChannelApi* | [**ChannelCreate**](docs/ChannelApi.md#channelcreate) | **Post** /channelcreate | Create a new channel
 *ChannelApi* | [**ChannelDelete**](docs/ChannelApi.md#channeldelete) | **Post** /channeldelete | Delete channel
 *ChannelApi* | [**ChannelEdit**](docs/ChannelApi.md#channeledit) | **Post** /channeledit | Edit channel
-*ChannelApi* | [**ChannelList**](docs/ChannelApi.md#channellist) | **Get** /channellist | Gets list of channels
+*ChannelApi* | [**ChannelInfo**](docs/ChannelApi.md#channelinfo) | **Get** /channelinfo | Get info about a channel
 
 
 ## Documentation For Models
 
  - [ChannelCreateResponse](docs/ChannelCreateResponse.md)
  - [ChannelCreateResponseBody](docs/ChannelCreateResponseBody.md)
- - [ChannelListResponse](docs/ChannelListResponse.md)
- - [ChannelListResponseBody](docs/ChannelListResponseBody.md)
+ - [ChannelInfoResponse](docs/ChannelInfoResponse.md)
+ - [ChannelInfoResponseBody](docs/ChannelInfoResponseBody.md)
  - [MinimalResponse](docs/MinimalResponse.md)
  - [Status](docs/Status.md)
 

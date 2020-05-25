@@ -16,19 +16,26 @@ servers:
         default: "1"
         description: ID of the server to manipulate
 paths:
-  /channellist:
+  /channelinfo:
     get:
-      operationId: channelList
+      operationId: channelInfo
       tags:
         - Channel
-      summary: Gets list of channels
+      summary: Get info about a channel
+      parameters:
+        - name: cid
+          in: query
+          description: Channel ID
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Successful
           content:
             application/json:
               schema:
-                title: ChannelListResponse
+                title: ChannelInfoResponse
                 type: object
                 properties:
                   body:
@@ -38,12 +45,13 @@ paths:
                       properties:
                         channel_name:
                           type: string
-                        channel_needed_subscribe_power:
+                        channel_topic:
                           type: string
-                        channel_order:
+                        channel_description:
                           type: string
-                        cid:
+                        channel_flag_permanent:
                           type: string
+                          enum: ["0", "1"]
                   status:
                     $ref: "#/components/schemas/Status"
   /channelcreate:
@@ -69,6 +77,12 @@ paths:
           description: Channel description
           schema:
             type: string
+        - name: channel_flag_permanent
+          in: query
+          description: Mark channel as permanent
+          schema:
+            type: string
+            enum: ["0", "1"]
       responses:
         "200":
           description: Successful
@@ -100,6 +114,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: channel_name
+          in: query
+          description: Channel name
+          schema:
+            type: string
         - name: channel_topic
           in: query
           description: Channel topic
@@ -110,6 +129,12 @@ paths:
           description: Channel description
           schema:
             type: string
+        - name: channel_flag_permanent
+          in: query
+          description: Mark channel as permanent
+          schema:
+            type: string
+            enum: ["0", "1"]
         - name: channel_codec_quality
           in: query
           description: Codec quality for the channel
@@ -139,6 +164,7 @@ paths:
           in: query
           description: Force the deletion
           schema:
+            type: number
             enum: [0, 1]
       responses:
         "200":

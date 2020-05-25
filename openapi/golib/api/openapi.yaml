@@ -16,17 +16,26 @@ servers:
       default: "1"
       description: ID of the server to manipulate
 paths:
-  /channellist:
+  /channelinfo:
     get:
-      operationId: channelList
+      operationId: channelInfo
+      parameters:
+      - description: Channel ID
+        explode: true
+        in: query
+        name: cid
+        required: true
+        schema:
+          type: string
+        style: form
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChannelListResponse'
+                $ref: '#/components/schemas/ChannelInfoResponse'
           description: Successful
-      summary: Gets list of channels
+      summary: Get info about a channel
       tags:
       - Channel
   /channelcreate:
@@ -57,6 +66,17 @@ paths:
         schema:
           type: string
         style: form
+      - description: Mark channel as permanent
+        explode: true
+        in: query
+        name: channel_flag_permanent
+        required: false
+        schema:
+          enum:
+          - "0"
+          - "1"
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -79,6 +99,14 @@ paths:
         schema:
           type: string
         style: form
+      - description: Channel name
+        explode: true
+        in: query
+        name: channel_name
+        required: false
+        schema:
+          type: string
+        style: form
       - description: Channel topic
         explode: true
         in: query
@@ -93,6 +121,17 @@ paths:
         name: channel_description
         required: false
         schema:
+          type: string
+        style: form
+      - description: Mark channel as permanent
+        explode: true
+        in: query
+        name: channel_flag_permanent
+        required: false
+        schema:
+          enum:
+          - "0"
+          - "1"
           type: string
         style: form
       - description: Codec quality for the channel
@@ -167,39 +206,42 @@ components:
         message:
           type: string
       type: object
-    ChannelListResponse_body:
+    ChannelInfoResponse_body:
       example:
         channel_name: channel_name
-        channel_needed_subscribe_power: channel_needed_subscribe_power
-        channel_order: channel_order
-        cid: cid
+        channel_description: channel_description
+        channel_flag_permanent: "0"
+        channel_topic: channel_topic
       properties:
         channel_name:
           type: string
-        channel_needed_subscribe_power:
+        channel_topic:
           type: string
-        channel_order:
+        channel_description:
           type: string
-        cid:
+        channel_flag_permanent:
+          enum:
+          - "0"
+          - "1"
           type: string
-    ChannelListResponse:
+    ChannelInfoResponse:
       example:
         body:
         - channel_name: channel_name
-          channel_needed_subscribe_power: channel_needed_subscribe_power
-          channel_order: channel_order
-          cid: cid
+          channel_description: channel_description
+          channel_flag_permanent: "0"
+          channel_topic: channel_topic
         - channel_name: channel_name
-          channel_needed_subscribe_power: channel_needed_subscribe_power
-          channel_order: channel_order
-          cid: cid
+          channel_description: channel_description
+          channel_flag_permanent: "0"
+          channel_topic: channel_topic
         status:
           code: 0.8008281904610115
           message: message
       properties:
         body:
           items:
-            $ref: '#/components/schemas/ChannelListResponse_body'
+            $ref: '#/components/schemas/ChannelInfoResponse_body'
           type: array
         status:
           $ref: '#/components/schemas/Status'

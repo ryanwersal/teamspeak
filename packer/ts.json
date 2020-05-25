@@ -33,6 +33,11 @@
         "chmod 644 /etc/systemd/system/teamspeak.service",
         "systemctl enable teamspeak"
       ]
+    },
+    {
+      "type": "file",
+      "source": "query_ip_whitelist.txt",
+      "destination": "/root/teamspeak/query_ip_whitelist.txt"
     }
   ]
 }

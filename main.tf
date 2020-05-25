@@ -32,17 +32,21 @@ data "http" "ip" {
   url = "https://api.ipify.org/"
 }
 
+locals {
+  self_ip_cidr = ["${chomp(data.http.ip.body)}/32"]
+}
+
 resource "digitalocean_firewall" "fw" {
   name = "teamspeak-firewall"
 
   droplet_ids = [digitalocean_droplet.ts.id]
 
-  # # SSH
-  # inbound_rule {
-  #   protocol         = "tcp"
-  #   port_range       = "22"
-  #   source_addresses = ["${chomp(data.http.ip.body)}/32"]
-  # }
+  # SSH
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = local.self_ip_cidr
+  }
 
   # Teamspeak voice
   inbound_rule {
@@ -56,6 +60,13 @@ resource "digitalocean_firewall" "fw" {
     protocol         = "tcp"
     port_range       = "30033"
     source_addresses = local.all_addresses
+  }
+
+  # Teamspeak WebQuery
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "10080"
+    source_addresses = local.self_ip_cidr
   }
 
   # HTTPS (teamspeak server list queries)
@@ -94,4 +105,19 @@ resource "digitalocean_project" "ts" {
     digitalocean_domain.domain.urn,
     digitalocean_floating_ip.ip.urn,
   ]
+}
+
+provider "teamspeak" {
+  endpoint  = "http://${digitalocean_record.ts.fqdn}:10080/1"
+  api_token = var.teamspeak_token
+}
+
+resource "teamspeak_channel" "channels" {
+  depends_on = [digitalocean_droplet.ts, digitalocean_domain.domain]
+  for_each   = toset(["League of Legends", "Apex Legends", "Raft", "Vermintide"])
+
+  channel_name        = each.value
+  channel_topic       = "${each.value} Topic"
+  channel_description = "${each.value} Description"
+  permanent           = true
 }

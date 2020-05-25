@@ -1,4 +1,4 @@
-package openapi
+package teamspeak
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 
 func BuildConfig() *Configuration {
 	cfg := NewConfiguration()
+	cfg.BasePath = os.Getenv("TEAMSPEAK_API_URL")
 	cfg.AddDefaultHeader("x-api-key", os.Getenv("TEAMSPEAK_TOKEN"))
 	return cfg
 }
@@ -19,9 +20,9 @@ func BuildClient() *APIClient {
 	return c
 }
 
-func TestChannelList(t *testing.T) {
+func TestChannelInfo(t *testing.T) {
 	c := BuildClient()
-	data, _, err := c.ChannelApi.ChannelList(context.TODO())
+	data, _, err := c.ChannelApi.ChannelInfo(context.TODO(), "1")
 	if err != nil {
 		t.Error(err)
 		return
@@ -42,7 +43,7 @@ func TestChannelCreate(t *testing.T) {
 	var cid string
 
 	{
-		data, _, err := c.ChannelApi.ChannelCreate(context.TODO(), "Test Channel Name", &ChannelCreateOpts{})
+		data, _, err := c.ChannelApi.ChannelCreate(context.TODO(), "Test Channel Name", &ChannelCreateOpts{ChannelFlagPermanent: optional.NewString("1")})
 		if err != nil {
 			t.Error(err)
 			return
@@ -115,7 +116,7 @@ func TestChannelEdit(t *testing.T) {
 	}
 }
 
-func TestChannelDeleete(t *testing.T) {
+func TestChannelDelete(t *testing.T) {
 	c := BuildClient()
 	var cid string
 

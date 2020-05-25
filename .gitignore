@@ -3,3 +3,5 @@ doc
 *.tfstate
 *.tfstate.backup
 .terraform
+terraform-provider-teamspeak
+.idea
