@@ -23,6 +23,11 @@ resource "digitalocean_droplet" "ts" {
   ssh_keys = [data.digitalocean_ssh_key.default.fingerprint]
 }
 
+resource "digitalocean_floating_ip" "ip" {
+  region     = local.region
+  droplet_id = digitalocean_droplet.ts.id
+}
+
 data "http" "ip" {
   url = "https://api.ipify.org/"
 }
@@ -76,7 +81,7 @@ resource "digitalocean_record" "ts" {
   domain = digitalocean_domain.domain.name
   type   = "A"
   name   = "ts"
-  value  = digitalocean_droplet.ts.ipv4_address
+  value  = digitalocean_floating_ip.ip.ip_address
 }
 
 resource "digitalocean_project" "ts" {
@@ -86,6 +91,7 @@ resource "digitalocean_project" "ts" {
   environment = "Production"
   resources = [
     digitalocean_droplet.ts.urn,
-    digitalocean_domain.domain.urn
+    digitalocean_domain.domain.urn,
+    digitalocean_floating_ip.ip.urn,
   ]
 }
