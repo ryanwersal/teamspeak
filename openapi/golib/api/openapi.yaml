@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  description: Teamspeak WebQuery
+  title: Teamspeak
+  version: 3.12.0
+servers:
+- url: http://{host}:{port}/{serverId}
+  variables:
+    host:
+      default: 127.0.0.1
+      description: Host of the Teamspeak WebQuery server
+    port:
+      default: "10080"
+      description: HTTP port that WebQuery is bound to
+    serverId:
+      default: "1"
+      description: ID of the server to manipulate
+paths:
+  /channellist:
+    get:
+      operationId: channelList
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelListResponse'
+          description: Successful
+      summary: Gets list of channels
+      tags:
+      - Channel
+  /channelcreate:
+    post:
+      operationId: channelCreate
+      parameters:
+      - description: Channel's name
+        explode: true
+        in: query
+        name: channel_name
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: Channel's topic
+        explode: true
+        in: query
+        name: channel_topic
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          description: Successful
+      summary: Create a new channel
+      tags:
+      - Channel
+components:
+  schemas:
+    ChannelListResponse:
+      example:
+        body:
+        - channel_name: channel_name
+          channel_needed_subscribe_power: channel_needed_subscribe_power
+          channel_order: channel_order
+          cid: cid
+        - channel_name: channel_name
+          channel_needed_subscribe_power: channel_needed_subscribe_power
+          channel_order: channel_order
+          cid: cid
+        status:
+          code: 0.8008281904610115
+          message: message
+      properties:
+        body:
+          items:
+            $ref: '#/components/schemas/ChannelListResponse_body'
+          type: array
+        status:
+          $ref: '#/components/schemas/ChannelListResponse_status'
+    ChannelListResponse_body:
+      example:
+        channel_name: channel_name
+        channel_needed_subscribe_power: channel_needed_subscribe_power
+        channel_order: channel_order
+        cid: cid
+      properties:
+        channel_name:
+          type: string
+        channel_needed_subscribe_power:
+          type: string
+        channel_order:
+          type: string
+        cid:
+          type: string
+    ChannelListResponse_status:
+      example:
+        code: 0.8008281904610115
+        message: message
+      properties:
+        code:
+          type: number
+        message:
+          type: string
