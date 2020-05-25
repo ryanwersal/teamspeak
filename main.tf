@@ -1,7 +1,8 @@
 provider "digitalocean" {}
 
 locals {
-  region = "nyc3"
+  region        = "nyc3"
+  all_addresses = ["0.0.0.0/0", "::/0"]
 }
 
 data "digitalocean_ssh_key" "default" {
@@ -31,28 +32,39 @@ resource "digitalocean_firewall" "fw" {
 
   droplet_ids = [digitalocean_droplet.ts.id]
 
-  inbound_rule {
-    protocol         = "tcp"
-    port_range       = "22"
-    source_addresses = ["${chomp(data.http.ip.body)}/32"]
-  }
+  # # SSH
+  # inbound_rule {
+  #   protocol         = "tcp"
+  #   port_range       = "22"
+  #   source_addresses = ["${chomp(data.http.ip.body)}/32"]
+  # }
 
+  # Teamspeak voice
   inbound_rule {
     protocol         = "udp"
     port_range       = "9987"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    source_addresses = local.all_addresses
   }
 
+  # Teamspeak files
   inbound_rule {
     protocol         = "tcp"
     port_range       = "30033"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    source_addresses = local.all_addresses
   }
 
+  # HTTPS (teamspeak server list queries)
   outbound_rule {
     protocol              = "tcp"
     port_range            = "443"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
+    destination_addresses = local.all_addresses
+  }
+
+  # DNS
+  outbound_rule {
+    protocol              = "udp"
+    port_range            = "53"
+    destination_addresses = local.all_addresses
   }
 }
 
